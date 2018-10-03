@@ -61,20 +61,17 @@ class SportsDatabaseUtil:
         mapped_data = {}
         for column_data in data['groups']:
             mapped_data[column_data['sdql']] = column_data['columns']
-        # pd_data = {}
-        # df = pd.DataFrame(columns=headers)
-        # for key in mapped_data.keys():
-        #     df = df.append(pd.Series(mapped_data[key], index=[key]))
 
-        # count = 0
-        # table_data=
-        # for header in headers:
-        #     mapped_data[header] = column_data[count]
-        #     count += 1
-        # pd_data = {}
-        # for key in mapped_data.keys():
-        #     pd_data[key] = pd.Series(mapped_data[key])
-        df = pd.DataFrame(columns=headers, data=mapped_data.values(), index=mapped_data.keys())
-        with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-            print(df)
+        #clean data for some reason its an array of arrays of arrays
+        for key in mapped_data.keys():
+            column_data = mapped_data[key]
+            column_list = [data[0] for data in column_data]
+            mapped_data[key] = column_list
+        
+        df = pd.DataFrame(columns=headers, data=list(mapped_data.values()), index=list(mapped_data.keys()))
+        df['off_yards_total'] = df.off_passing_yards + df.off_rushing_yards + df.off_receiving_yards
+        df['def_yards_total'] = df.def_passing_yards + df.def_rushing_yards + df.def_receiving_yards
+        df['ypp_for'] = df.off_yards_total / df.off_plays 
+        df['ypp_allowed'] = df.def_yards_total / df.plays_against
+        df['net_ypp'] = df['ypp_for'] - df['ypp_allowed']
         df.to_csv('/home/ccorbo/betting_model/test.csv')
