@@ -27,12 +27,31 @@ class SDQLQueries:
         season,
         week,
         team,
-        o:team,
+        o:team as opponent,
         points,
-        o:points,
+        o:points as points_against,
         line,
         ats margin,
         site,
-        surface
+        surface,
+        passing yards as off_passing_yards,
+        rushing yards as off_rushing_yards,
+        o:passing yards as def_passing_yards,
+        o:rushing yards as def_rushing_yards,
+        plays as off_plays,
+        o:plays as def_plays
         @team and season > 2010
     """
+
+    CURRENT_MATCHUP_QUERY = """
+        week,
+        team,
+        o:team as opponent,
+        line,
+        total,
+        site,
+        surface,
+        start time,
+        ats streak,
+        division
+        @"""

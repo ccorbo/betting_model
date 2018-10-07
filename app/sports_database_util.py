@@ -13,8 +13,10 @@ import json
 
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+from weather import Weather, Unit
 
 from constants.nfl_team_constants import NflTeamConstants
+from constants.nfl_stadium_constants import NflStadiumConstants
 from app.sdql_queries import SDQLQueries
 
 class SportsDatabaseUtil:
@@ -84,6 +86,7 @@ class SportsDatabaseUtil:
         df['ypp_allowed'] = df.def_yards_total / df.plays_against
         df['net_ypp'] = df['ypp_for'] - df['ypp_allowed']
         df['net_points'] = df.points_for - df.points_allowed
+        df['power_rating'] = df['net_ypp'] + df['net_points']
         df.to_csv(f'/home/ccorbo/betting_model/test_{season_year}.csv')
 
     def _get_past_matchups(self):
@@ -95,9 +98,6 @@ class SportsDatabaseUtil:
         self._build_past_matchup_table(dict_response)
 
     def _build_past_matchup_table(self, data):
-        # file = open('testfile.txt','w') 
-        # file.write(json.dumps(data))
-
         data_frames = []
         headers = data['headers']
         for team_data in data['groups']:
@@ -113,3 +113,33 @@ class SportsDatabaseUtil:
 
         result = pd.concat(data_frames)
         result.to_csv(f'/home/ccorbo/betting_model/test_past_matchups.csv')
+
+    def get_weeks_matchups(self, week, year):
+        where_clause = f'week={str(week)} and season={str(year)}'
+        response = self._call_sportsdatabase(f'{SDQLQueries.CURRENT_MATCHUP_QUERY}{where_clause}')
+        dict_response = self._parse_response(response.text)
+        self._build_weeks_matchups_table(dict_response, week, year)
+
+    def _build_weeks_matchups_table(self, data, week, year):
+        # file = open('testfile.txt', 'w')
+        # file.write(json.dumps(data))
+        headers = data['headers']
+        df_map = {}
+        for group in data['groups']:            
+            headers_count = 0
+            for column_data in group['columns']:
+                df_map[headers[headers_count]] = column_data
+                headers_count += 1
+        df = pd.DataFrame(df_map)
+        # Get weatehr report for hokme teams
+        df['weather'] = ''
+        w = Weather(Unit.FAHRENHEIT)
+        for index, row in df.iterrows():
+            if row['site'] == 'home':
+                location = NflStadiumConstants.STADIUM_LOCATION[row['team']]
+                lookup = w.lookup_by_latlng(location['latitude'], location['longitude'])
+                condition = lookup.condition
+                df.set_value(index, 'weather', condition.text)
+            else:
+                df.set_value(index, 'weather', 'AWAY GAME')
+        df.to_csv(f'/home/ccorbo/betting_model/test_current_matchups.csv')
