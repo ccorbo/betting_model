@@ -7,21 +7,21 @@ files in  data directory
 """
 import pandas as pd
 import requests
-import urllib.request
-import urllib.parse
 import json
 
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
-from weather import Weather, Unit
 
 from constants.nfl_team_constants import NflTeamConstants
 from constants.nfl_stadium_constants import NflStadiumConstants
 from app.sdql_queries import SDQLQueries
+from app.dataframes_table_util import DataframesTableUtil
 
 class SportsDatabaseUtil:
 
     BASE_URL = 'http://api.sportsdatabase.com/nfl/query.json'
+
+    def __init__(self):
+        self.tables_util = DataframesTableUtil()
 
     def _call_sportsdatabase(self, query):
         payload = {
@@ -38,7 +38,7 @@ class SportsDatabaseUtil:
     def get_season_totals_stats(self, season_year):
         response = self._call_sportsdatabase(f'{SDQLQueries.SEASON_TOTALS_QUERY}{str(season_year)}')
         dict_response = self._parse_response(response.text)
-        self._build_season_totals_table(dict_response, season_year)
+        self.tables_util._build_season_totals_table(dict_response, season_year)
 
     def get_season_wins_total(self, season_year):
         response = self._call_sportsdatabase(f'{SDQLQueries.WIN_TOTALS_QUERY}{str(season_year)}')
@@ -61,85 +61,18 @@ class SportsDatabaseUtil:
         dict_response = json.loads(raw)
         return dict_response
 
-    def _build_season_totals_table(self, data, season_year):
-        """
-        Builds pandas table from dict of data
-
-        Args:
-            data(dict): Dict of data
-        """
-        headers = data['headers']
-        mapped_data = {}
-        for column_data in data['groups']:
-            mapped_data[column_data['sdql']] = column_data['columns']
-
-        #clean data for some reason its an array of arrays of arrays
-        for key in mapped_data.keys():
-            column_data = mapped_data[key]
-            column_list = [data[0] for data in column_data]
-            mapped_data[key] = column_list
-        
-        df = pd.DataFrame(columns=headers, data=list(mapped_data.values()), index=list(mapped_data.keys()))
-        df['off_yards_total'] = df.off_passing_yards + df.off_rushing_yards
-        df['def_yards_total'] = df.def_passing_yards + df.def_rushing_yards
-        df['ypp_for'] = df.off_yards_total / df.off_plays 
-        df['ypp_allowed'] = df.def_yards_total / df.plays_against
-        df['net_ypp'] = df['ypp_for'] - df['ypp_allowed']
-        df['net_points'] = df.points_for - df.points_allowed
-        df['power_rating'] = df['net_ypp'] + df['net_points']
-        df.to_csv(f'/home/ccorbo/betting_model/test_{season_year}.csv')
-
     def _get_past_matchups(self):
         """
             Gets all matchups greater than 2010
         """
         response = self._call_sportsdatabase(f'{SDQLQueries.PAST_MATCHUP_QUERY}')
         dict_response = self._parse_response(response.text)
-        self._build_past_matchup_table(dict_response)
-
-    def _build_past_matchup_table(self, data):
-        data_frames = []
-        headers = data['headers']
-        for team_data in data['groups']:
-            name = team_data['sdql']
-            df = pd.DataFrame(columns=headers)
-            header_count = 0
-            df_map = {}
-            for column_data in team_data['columns']:
-                df_map[headers[header_count]] = pd.Series(data=column_data)
-                header_count += 1
-            df = pd.DataFrame(df_map)
-            data_frames.append(df)
-
-        result = pd.concat(data_frames)
-        result.to_csv(f'/home/ccorbo/betting_model/test_past_matchups.csv')
+        self.tables_util._build_past_matchup_table(dict_response)
 
     def get_weeks_matchups(self, week, year):
         where_clause = f'week={str(week)} and season={str(year)}'
         response = self._call_sportsdatabase(f'{SDQLQueries.CURRENT_MATCHUP_QUERY}{where_clause}')
         dict_response = self._parse_response(response.text)
-        self._build_weeks_matchups_table(dict_response, week, year)
+        self.tables_util._build_weeks_matchups_table(dict_response, week, year)
 
-    def _build_weeks_matchups_table(self, data, week, year):
-        # file = open('testfile.txt', 'w')
-        # file.write(json.dumps(data))
-        headers = data['headers']
-        df_map = {}
-        for group in data['groups']:            
-            headers_count = 0
-            for column_data in group['columns']:
-                df_map[headers[headers_count]] = column_data
-                headers_count += 1
-        df = pd.DataFrame(df_map)
-        # Get weatehr report for hokme teams
-        df['weather'] = ''
-        w = Weather(Unit.FAHRENHEIT)
-        for index, row in df.iterrows():
-            if row['site'] == 'home':
-                location = NflStadiumConstants.STADIUM_LOCATION[row['team']]
-                lookup = w.lookup_by_latlng(location['latitude'], location['longitude'])
-                condition = lookup.condition
-                df.set_value(index, 'weather', condition.text)
-            else:
-                df.set_value(index, 'weather', 'AWAY GAME')
-        df.to_csv(f'/home/ccorbo/betting_model/test_current_matchups.csv')
+    

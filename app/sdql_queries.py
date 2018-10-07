@@ -15,7 +15,8 @@ class SDQLQueries:
         Sum(plays) as off_plays,
         Sum(o:plays) as plays_against,
         Sum(points) as points_for,
-        Sum(o:points) as points_allowed
+        Sum(o:points) as points_allowed,
+        Average(regular season wins line) as season_wins_line
         @team and season="""
 
     WIN_TOTALS_QUERY = """

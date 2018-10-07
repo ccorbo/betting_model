@@ -1,0 +1,31 @@
+,week,team,opponent,line,total,site,surface,starttime,atsstreak,division,weather,spread
+0,5,Patriots,Colts,-11.0,53.0,home,artificial,2020,1,AFCEast,Mostly Cloudy,17.390498004764193
+1,5,Colts,Patriots,11.0,53.0,away,artificial,2020,-1,AFCSouth,AWAY GAME,-17.390498004764193
+2,5,Bengals,Dolphins,-6.0,48.0,home,artificial,1300,1,AFCNorth,Mostly Sunny,21.337132766588972
+3,5,Dolphins,Bengals,6.0,48.0,away,artificial,1300,-1,AFCEast,AWAY GAME,-21.337132766588972
+4,5,Bills,Titans,5.5,39.5,home,artificial,1300,-1,AFCEast,Cloudy,-59.24926095177195
+5,5,Titans,Bills,-5.5,39.5,away,artificial,1300,3,AFCSouth,AWAY GAME,59.24926095177195
+6,5,Browns,Ravens,3.0,45.5,home,grass,1300,-1,AFCNorth,Partly Cloudy,-61.58223932250908
+7,5,Ravens,Browns,-3.0,45.5,away,grass,1300,2,AFCNorth,AWAY GAME,61.58223932250908
+8,5,Chargers,Raiders,-5.5,52.5,home,grass,1605,-2,AFCWest,Partly Cloudy,17.983386122157555
+9,5,Raiders,Chargers,5.5,52.5,away,grass,1605,1,AFCWest,AWAY GAME,-17.983386122157555
+10,5,Chiefs,Jaguars,-3.0,49.0,home,grass,1300,0,AFCWest,Cloudy,-3.5770696696256437
+11,5,Jaguars,Chiefs,3.0,49.0,away,grass,1300,1,AFCSouth,AWAY GAME,3.5770696696256437
+12,5,Eagles,Vikings,-3.0,47.0,home,grass,1625,-3,NFCEast,Mostly Cloudy,21.111021974036074
+13,5,Vikings,Eagles,3.0,47.0,away,grass,1625,0,NFCNorth,AWAY GAME,-21.111021974036074
+14,5,Fortyniners,Cardinals,-3.5,40.5,home,grass,1625,1,NFCWest,Sunny,41.07860316012846
+15,5,Cardinals,Fortyniners,3.5,40.5,away,grass,1625,2,NFCWest,AWAY GAME,-41.07860316012846
+16,5,Jets,Broncos,1.0,42.5,home,artificial,1300,-3,AFCEast,Mostly Cloudy,12.485095720983912
+17,5,Broncos,Jets,-1.0,42.5,away,artificial,1300,0,AFCWest,AWAY GAME,-12.485095720983912
+18,5,Lions,Packers,-1.0,51.0,home,artificial,1300,3,NFCNorth,Cloudy,-29.103228120513602
+19,5,Packers,Lions,1.0,51.0,away,artificial,1300,1,NFCNorth,AWAY GAME,29.103228120513602
+20,5,Panthers,Giants,-6.5,43.5,home,grass,1300,1,NFCSouth,Partly Cloudy,33.796350283362095
+21,5,Giants,Panthers,6.5,43.5,away,grass,1300,-1,NFCEast,AWAY GAME,-33.796350283362095
+22,5,Seahawks,Rams,7.5,50.5,home,artificial,1625,-1,NFCWest,Showers,-71.24554797900458
+23,5,Rams,Seahawks,-7.5,50.5,away,artificial,1625,0,NFCWest,AWAY GAME,71.24554797900458
+24,5,Steelers,Falcons,-3.0,58.0,home,grass,1300,-1,AFCNorth,Partly Cloudy,-8.687834436690226
+25,5,Falcons,Steelers,3.0,58.0,away,grass,1300,-2,NFCSouth,AWAY GAME,8.687834436690226
+26,5,Texans,Cowboys,-3.5,45.5,home,artificial,2020,1,AFCSouth,Mostly Cloudy,-2.1611564251200814
+27,5,Cowboys,Texans,3.5,45.5,away,artificial,2020,-2,NFCEast,AWAY GAME,2.1611564251200814
+28,5,Saints,Redskins,-6.5,52.5,home,artificial,2015,2,NFCSouth,Thunderstorms,-5.2660272744098116
+29,5,Redskins,Saints,6.5,52.5,away,artificial,2015,1,NFCEast,AWAY GAME,5.2660272744098116
