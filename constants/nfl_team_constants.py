@@ -3,8 +3,9 @@ NFL Teams Constants File
 
 @copyright Chris Corbo - 2018
 """
+from constants.base_constants import BaseConstants
 
-class NflTeamConstants:
+class NflTeamConstants(BaseConstants):
 
     TEAM_NAMES = [
         # AFC East
